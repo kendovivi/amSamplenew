@@ -1,0 +1,102 @@
+<%= javascript_include_tag 'amcharts' %>
+<%= javascript_include_tag 'cust_amcharts'%>
+<script type="text/javascript">
+var chartData = <%= @json_val %>;
+var names = <%= @json_arr.to_json.html_safe %>
+var chart;
+var graph;
+
+AmCharts.ready(function() {
+	chart = new AmCharts.AmSerialChart();
+	chart.startDuration = 1;
+	graph = new AmCharts.AmGraph();
+	var categoryAxis = chart.categoryAxis;
+	var valueAxis = new AmCharts.ValueAxis();
+	chart.addValueAxis(valueAxis);
+	var legend = new AmCharts.AmLegend();
+	chart.addLegend(legend);
+	var scrollbar = new AmCharts.ChartScrollbar()
+	chart.addChartScrollbar(scrollbar);              
+    var chartCursor = new AmCharts.ChartCursor();
+    chart.addChartCursor(chartCursor);
+	
+	chart.dataProvider = chartData;
+	chart.pathToImages = "/assets/";
+	chart.categoryField = "date";
+	chart.columnWidth = 5;
+	setDefaultPopOfChart(chart);
+
+    // GRAPH
+	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i); i += 1;});
+	
+	//横軸
+	chart.categoryAxis.parseDates = true;
+	chart.categoryAxis.minPeriod = "mm";
+    categoryAxis.labelRotation = 90;
+    setDefaultAxisAttr(categoryAxis,"時刻");	
+	
+	//縦軸
+	setGridOfAxis(valueAxis,50000,0,10000,"#000000");
+	setDefaultAxisAttr(valueAxis, "平均売上数");
+	
+	// LEGEND
+	legend.align = "left";
+	legend.labelText = "[[title]]";
+
+	 //スコロールバーの縦横長さの設定
+    scrollbar.scrollbarHeight = 25;
+    scrollbar.dragIconHeight = 23;
+    scrollbar.dragIconWidth = 12;
+    //スコロールバーの色設定
+    scrollbar.backgroundColor = "#DBDBBF";
+    scrollbar.selectedBackgroundColor = "#5B5B58";
+
+chart.write("chartdiv");
+});
+
+ function setGraph3D(){
+    if (document.getElementById("graph3d_true").checked){
+        set3D(chart, true);
+    } else{
+        set3D(chart, false);
+    }
+    chart.validateNow();
+ }
+
+ function setLabel(){
+    if (document.getElementById("label_hide").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.labelText = "";
+    	});     
+    } else if (document.getElementById("label_show").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.labelText = "[[value]]";
+    	});       
+    }
+    chart.validateNow();
+ }
+ 
+ function setGraphtype(){
+    if (document.getElementById("graphtype_column").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.type = "column";
+    		graph.lineAlpha = 0;
+			graph.fillAlphas = 1;
+    	});     
+    } else if (document.getElementById("graphtype_line").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.type = "line";
+    		graph.lineAlpha = 1;
+			graph.fillAlphas = 0;
+    	});       
+    }
+    chart.validateNow();
+ }
+</script>
+<div id="chartdiv" class="chartdiv" style=" height:450px;"></div>
+<input type="radio" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
+<input type="radio" checked="true" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
+<input type="radio" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
+<input type="radio" checked="true" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
+<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し
+<input type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
