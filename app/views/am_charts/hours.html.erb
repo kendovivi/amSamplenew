@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'amcharts' %>
 <%= javascript_include_tag 'cust_amcharts'%>
 <script type="text/javascript">
-var chartData = <%= @json_val %>;
+var chartData = <%= @json_val.html_safe%>;
 var names = <%= @json_arr.to_json.html_safe %>
 var chart;
 var graph;
@@ -23,20 +23,20 @@ AmCharts.ready(function() {
 	chart.dataProvider = chartData;
 	chart.pathToImages = "/assets/";
 	chart.categoryField = "date";
-	chart.columnWidth = 5;
+	chart.columnWidth = 0.5;
 	setDefaultPopOfChart(chart);
 
     // GRAPH
 	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i); i += 1;});
 	
 	//横軸
-	chart.categoryAxis.parseDates = true;
-	chart.categoryAxis.minPeriod = "mm";
+	//chart.categoryAxis.parseDates = true;								#comment out if categoryAxis is string
+	//chart.categoryAxis.minPeriod = "mm";								#comment out if categoryAxis is string
     categoryAxis.labelRotation = 90;
     setDefaultAxisAttr(categoryAxis,"時刻");	
 	
 	//縦軸
-	setGridOfAxis(valueAxis,50000,0,10000,"#000000");
+	setGridOfAxis(valueAxis,5000,0,1000,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上数");
 	
 	// LEGEND
