@@ -38,6 +38,32 @@ class AmChartsController < ApplicationController
     @json_arr = result[1]
     @max = result[2]
     @headers = result[3]
+    
+    if params[:typecolumn2].blank? then
+
+    else
+    	session[:typecolumn2] = params[:typecolumn2]
+    end
+    
+    @type2_value = if session[:typecolumn2].blank?
+     	"AIR"
+    else
+    	session[:typecolumn2]	
+    end
+    
+    if params[:typecolumn1].blank? then
+
+    else
+    	session[:typecolumn1] = params[:typecolumn1]
+    end
+    
+    @type1_value = if session[:typecolumn1].blank?
+     	"AIR"
+    else
+    	session[:typecolumn1]	
+    end
+    
+    
   end
   
   def hoursSale

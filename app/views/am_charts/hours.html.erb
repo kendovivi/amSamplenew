@@ -1,14 +1,18 @@
 <%= javascript_include_tag 'amcharts' %>
 <%= javascript_include_tag 'cust_amcharts'%>
+<%= javascript_include_tag 'bootstrap'%>
 <script type="text/javascript">
 var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
 var names = <%= @json_arr.to_json.html_safe %>
 var max = <%= @max %>;	
 var headers = <%= @headers.to_json.html_safe%>;
+var type1 = <%= @type1_value.to_json.html_safe%>
+var type2 = <%= @type2_value.to_json.html_safe%>
 var chart;
 var graph;
 
-
+	//	$("#typecolumn2").find("option[text='"+type2+"']").attr("selected",true);
+	
 AmCharts.ready(function() {
 	chart = new AmCharts.AmSerialChart();
 	chart.startDuration = 1;
@@ -98,10 +102,11 @@ chart.write("chartdiv");
 </script>
 
 <div class="row">
+	<form>
 	<div class="span4">
-	　　項目名 <select id="typecolumn1">
+	　　項目名 <select id="typecolumn1" name="typecolumn1">
 			</select></br>
-	　　項目名	<select id="typecolumn2">
+	　　項目名 <select id="typecolumn2" name="typecolumn2">
 			</select>
 	</div>
 	<div class="span4">
@@ -112,6 +117,7 @@ chart.write("chartdiv");
 	<div class="span1">
 		<input class="btn btn-primary" name="commit" value="確認" type="submit">
 	</div>
+	</form>
 </div>
 
 <div class="row" style="width: 1100px;">		
@@ -127,4 +133,22 @@ chart.write("chartdiv");
 </div>		
 		
 
+
+  
+
+
+      
+     
+
+<div class="btn-group">
+  <a class="btn btn-primary" href="#"><i class="icon-pencil icon-white"></i> 計算</a>
+  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
+    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+    <li class="divider"></li>
+    <li><a href="#"><i class="i"></i> Make admin</a></li>
+  </ul>
+</div>
 
