@@ -24,10 +24,10 @@ def create_json(result_hash)
   # 以下のようなamchartsが解析できるデータを作成する
   json_val = "["
   times.each do |time|
-    #t = time + "000";                                                   #if time format
-    #val_str = "{date: new Date(#{t})"
-    val_str = "{date:"
-    val_str << "\"#{time}\""                                             #if string format
+    t = time + "000";                                                   #if time format
+    val_str = "{date: new Date(#{t})"
+    #val_str = "{date:"
+    #val_str << "\"#{time}\""                                           #if string format
     json_arr.each do |arr_h|
       val = result_hash["#{arr_h[0]},#{time}"]
       val_str << ", #{arr_h[1]}:"

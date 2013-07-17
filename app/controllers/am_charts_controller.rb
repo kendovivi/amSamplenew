@@ -31,7 +31,7 @@ class AmChartsController < ApplicationController
   end
   
   def hours
-    result_hash = caculate_data("public/data/CSV_test.csv")
+    result_hash = caculate_data("public/data/CSV_2013060100.csv")
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]

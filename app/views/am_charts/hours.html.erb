@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'amcharts' %>
 <%= javascript_include_tag 'cust_amcharts'%>
 <script type="text/javascript">
-var chartData = <%= @json_val.html_safe%>;
+var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
 var names = <%= @json_arr.to_json.html_safe %>
 var chart;
 var graph;
@@ -23,20 +23,20 @@ AmCharts.ready(function() {
 	chart.dataProvider = chartData;
 	chart.pathToImages = "/assets/";
 	chart.categoryField = "date";
-	chart.columnWidth = 0.5;
+	chart.columnWidth = 5;
 	setDefaultPopOfChart(chart);
 
     // GRAPH
 	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i); i += 1;});
 	
 	//横軸
-	//chart.categoryAxis.parseDates = true;								#comment out if categoryAxis is string
-	//chart.categoryAxis.minPeriod = "mm";								#comment out if categoryAxis is string
+	chart.categoryAxis.parseDates = true;								//comment out if categoryAxis is string
+	chart.categoryAxis.minPeriod = "mm";								//comment out if categoryAxis is string
     categoryAxis.labelRotation = 90;
     setDefaultAxisAttr(categoryAxis,"時刻");	
 	
 	//縦軸
-	setGridOfAxis(valueAxis,5000,0,1000,"#000000");
+	setGridOfAxis(valueAxis,50000,0,10000,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上数");
 	
 	// LEGEND
@@ -93,10 +93,39 @@ chart.write("chartdiv");
     chart.validateNow();
  }
 </script>
-<div id="chartdiv" class="chartdiv" style=" height:450px;"></div>
-<input type="radio" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
-<input type="radio" checked="true" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
-<input type="radio" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
-<input type="radio" checked="true" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
-<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し
-<input type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
+
+<div class="row">
+	<div class="span4">
+	　　項目名 <select>
+				<option>123</option>
+				<option>123</option>
+			</select></br>
+	　　項目名	<select>
+				<option>123</option>
+				<option>123</option>
+			</select>
+	</div>
+	<div class="span4">
+   		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> </br>
+   	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;">
+	</div> 		
+
+	<div class="span1">
+		<input class="btn btn-primary" name="commit" value="確認" type="submit">
+	</div>
+</div>
+
+<div class="row" style="width: 1100px;">		
+	<div class="span2">
+		<input type="radio" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
+		<input type="radio" checked="true" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
+		<input type="radio" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
+		<input type="radio" checked="true" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
+		<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し
+		<input type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
+	</div>
+	<div class="span10" id="chartdiv" class="chartdiv" style=" height:450px; width: 900px;"></div>
+</div>		
+		
+
+
