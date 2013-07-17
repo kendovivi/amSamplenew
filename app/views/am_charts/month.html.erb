@@ -3,6 +3,7 @@
 <script type="text/javascript">
 var chartData = <%= @json_val %>;
 var names = <%= @json_arr.to_json.html_safe %>
+var max = <%= @max %>;	
 var chart;
 var graph;
 
@@ -36,7 +37,7 @@ AmCharts.ready(function() {
     setDefaultAxisAttr(categoryAxis,"日付");	
 	
 	//縦軸
-	setGridOfAxis(valueAxis,30,0,5,"#000000");
+	setGridOfAxis(valueAxis,max,0,max/5,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上");
 	
 	// LEGEND

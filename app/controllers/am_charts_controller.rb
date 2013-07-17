@@ -14,6 +14,7 @@ class AmChartsController < ApplicationController
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
+    @max = result[2]
   end
   
   def week
@@ -35,6 +36,8 @@ class AmChartsController < ApplicationController
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
+    @max = result[2]
+    @headers = result[3]
   end
   
   def hoursSale

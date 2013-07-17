@@ -5,6 +5,7 @@ json_val = ""
 def create_json(result_hash)
   headers = []
   times = []
+  values = []
   json_arr = []
   result = []
   
@@ -12,6 +13,7 @@ def create_json(result_hash)
     header, time = key.split(",")
     headers << header unless headers.include? header
     times << time unless times.include? time
+    values << value.to_i unless values.include? value.to_i
   end
 
   times.sort!
@@ -36,9 +38,11 @@ def create_json(result_hash)
     json_val << "#{val_str}},"
   end
   
+
   json_val << "]"
 
-  result << json_val << json_arr
+  result << json_val << json_arr << values.max << headers
   return result
 end
+
 

@@ -7,20 +7,30 @@ require 'time'
 #Return result_hash
 def caculate_data(file_path)
   headers, *scores = CSV.read(file_path)
-  arr_t, *arr_v = scores.transpose                        #arr_tは入りかえる前の第一列（時間）, arr_vは入りかえる前の第二以後の列（温度）
-  result_hash = {}                                        #result_hash[:headerName] = arr_v[]
+  arr_t, *arr_v = scores.transpose                            #arr_tは入りかえる前の第一列（時間）, arr_vは入りかえる前の第二以後の列（温度）
+  result_hash = {}                                            #result_hash[:headerName] = arr_v[]
                                       
-  headers.each_with_index {|header, i|                    #caculate avg in 10 mins
-      
-    next if i == 0
+  headers.each_with_index {|header, i|                        #caculate avg in 10 mins
+    next if i == 0 
     
-
+   
+    flag = 10
     k = 0
-    6.times do
+    arr_t.length / flag == 0? cnt = 1: cnt = arr_t.length / flag     #garentee at least 1 cnt       
+    lastcnt = arr_t.length % flag
+    
+    cnt.times do
       sub = 0; 
-      arr_t[k..k+9].each do                                       
+      
+      f = k + 9
+      if f > arr_t.length
+        f= k + lastcnt
+      end
+      
+      arr_t[k..f].each do                                       
          sub += arr_v[i-1][k].to_i       
       end
+        
       time = Time.parse(arr_t[k]).to_i.to_s                #change to time format if the 1st column is date format
       #time = arr_t[k]                                     #do nothing if the 1st column is string format
       result_hash["#{header},#{time}"] = sub
@@ -28,7 +38,7 @@ def caculate_data(file_path)
     end
 
 
-=begin    
+=begin     
     arr_t.each_with_index{|t, j|
       time = Time.parse(t).to_i.to_s
       #time = arr_t[j]  
@@ -41,5 +51,5 @@ return result_hash
   
 end
 
-#puts caculate_data("../public/data/CSV_test1.csv")
+#puts caculate_data("../public/data/CSV_2013060100.csv")
 

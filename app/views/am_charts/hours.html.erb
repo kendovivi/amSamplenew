@@ -3,8 +3,11 @@
 <script type="text/javascript">
 var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
 var names = <%= @json_arr.to_json.html_safe %>
+var max = <%= @max %>;	
+var headers = <%= @headers.to_json.html_safe%>;
 var chart;
 var graph;
+
 
 AmCharts.ready(function() {
 	chart = new AmCharts.AmSerialChart();
@@ -36,7 +39,7 @@ AmCharts.ready(function() {
     setDefaultAxisAttr(categoryAxis,"時刻");	
 	
 	//縦軸
-	setGridOfAxis(valueAxis,50000,0,10000,"#000000");
+	setGridOfAxis(valueAxis,max,0,max/5,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上数");
 	
 	// LEGEND
@@ -96,13 +99,9 @@ chart.write("chartdiv");
 
 <div class="row">
 	<div class="span4">
-	　　項目名 <select>
-				<option>123</option>
-				<option>123</option>
+	　　項目名 <select id="typecolumn1">
 			</select></br>
-	　　項目名	<select>
-				<option>123</option>
-				<option>123</option>
+	　　項目名	<select id="typecolumn2">
 			</select>
 	</div>
 	<div class="span4">

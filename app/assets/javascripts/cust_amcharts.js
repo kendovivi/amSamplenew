@@ -1,4 +1,17 @@
 
+//initialize
+window.onload=function(){
+	$.each(headers,function(i,header){
+		$("#typecolumn1").append($('<option>', { 
+	        value: header,
+	        text : header 
+    	}));
+		$("#typecolumn2").append($('<option>', { 
+	        value: header,
+	        text : header 
+        }));
+	});	
+}
 
 colors_arr = ["#3366CC","#FF6600","#FF9E01","#FCD202","#F8FF01","#B0DE09","#0D8ECF","#0D52D1","#2A0CD0","#754DEB","#999999","#000000"];
 function create_graph(title, valueField,chart,color_index, valueAxis) {
@@ -65,3 +78,5 @@ function setDefaultPopOfChart(chart) {
     chart.balloon.adjustBorderColor = true;
     chart.balloon.fillColor = "#ffffff";
 }
+
+
