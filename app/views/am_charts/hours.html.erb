@@ -26,6 +26,8 @@ AmCharts.ready(function() {
 	var categoryAxis = chart.categoryAxis;
 	var valueAxis = new AmCharts.ValueAxis();
 	chart.addValueAxis(valueAxis);
+	var valueAxis2 = new AmCharts.ValueAxis();
+	chart.addValueAxis(valueAxis2);
 	var legend = new AmCharts.AmLegend();
 	chart.addLegend(legend);
 	var scrollbar = new AmCharts.ChartScrollbar()
@@ -36,11 +38,11 @@ AmCharts.ready(function() {
 	chart.dataProvider = chartData;
 	chart.pathToImages = "/assets/";
 	chart.categoryField = "date";
-	chart.columnWidth = 0.8;
+	chart.columnWidth = 0.5;
 	setDefaultPopOfChart(chart);
 
     // GRAPH
-	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i); i += 1;});
+	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i, valueAxis2); i += 1;});
 	
 	//横軸
 	chart.categoryAxis.parseDates = true;								//comment out if categoryAxis is string
@@ -49,8 +51,12 @@ AmCharts.ready(function() {
     setDefaultAxisAttr(categoryAxis,"時刻");	
 	
 	//縦軸
-	setGridOfAxis(valueAxis,max,0,max/5,"#000000");
+	//setGridOfAxis(valueAxis,max,0,max/5,"#000000");
+	setGridOfAxis(valueAxis,5000,0,1000,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上数");
+	setGridOfAxis(valueAxis2,1000,0,200,"#000000");
+	setDefaultAxisAttr(valueAxis2, "平均売上数");
+	valueAxis2.position = "right";
 	
 	// LEGEND
 	legend.align = "left";
@@ -161,7 +167,7 @@ chart.write("chartdiv");
 		<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し<br/>
 		<input style="vertical-align: bottom;" type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
 	</div>
-	<div class="span10" id="chartdiv" class="chartdiv" style=" height:450px; width: 900px;"></div>
+	<div class="span10" id="chartdiv" class="chartdiv" style=" height:350px; width: 900px;"></div>
 </div>
 
 <div id="error_msg" class="alert alert-error" style="position:absolute; top: 0px; left: 720px;  height: 100px; width: 250px;">
@@ -170,20 +176,5 @@ chart.write("chartdiv");
   　指定された日付にはデータがない
   please choose again
 </div>
-
-
-<div class="btn-group">
-  <a class="btn btn-primary" href="#"><i class="icon-pencil icon-white"></i> 計算</a>
-  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-  <ul class="dropdown-menu">
-    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
-    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
-    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
-    <li class="divider"></li>
-    <li><a href="#"><i class="i"></i> Make admin</a></li>
-  </ul>
-</div>
-
-
 
 
