@@ -1,0 +1,189 @@
+<%= javascript_include_tag 'amcharts' %>
+<%= javascript_include_tag 'cust_amcharts'%>
+<%= javascript_include_tag 'bootstrap'%>
+<script type="text/javascript">
+var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
+var names = <%= @json_arr.to_json.html_safe %>;	
+var headers = <%= @headers.to_json.html_safe%>;
+var type1 = <%= @type1_value.to_json.html_safe%>;
+var type2 = <%= @type2_value.to_json.html_safe%>;
+var timeshow = <%= @timeshow.to_json.html_safe%>;
+var start_dt = <%= @start_dt_html.to_json.html_safe%>;
+var start_hm = <%= @start_hm.to_json.html_safe%>;
+var finish_dt = <%= @finish_dt_html.to_json.html_safe %>;
+var finish_hm = <%= @finish_hm.to_json.html_safe %>;
+var max = <%= @max.to_json.html_safe %> ;
+var suffix = <%= @suffix %>;
+var chart;
+var graph;
+
+
+
+AmCharts.ready(function() {
+	chart = new AmCharts.AmSerialChart();
+	chart.startDuration = 1;
+	graph = new AmCharts.AmGraph();
+	var categoryAxis = chart.categoryAxis;
+	var valueAxis = new AmCharts.ValueAxis();
+	chart.addValueAxis(valueAxis);
+	var legend = new AmCharts.AmLegend();
+	chart.addLegend(legend);
+	var scrollbar = new AmCharts.ChartScrollbar()
+	chart.addChartScrollbar(scrollbar);              
+    var chartCursor = new AmCharts.ChartCursor();
+    chart.addChartCursor(chartCursor);
+	
+	chart.dataProvider = chartData;
+	chart.pathToImages = "/assets/";
+	chart.categoryField = "date";
+	chart.columnWidth = 0.8;
+	setDefaultPopOfChart(chart);
+
+    // GRAPH
+	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i); i += 1;});
+	
+	//横軸
+	chart.categoryAxis.parseDates = true;								//comment out if categoryAxis is string
+	chart.categoryAxis.minPeriod = "mm";								//comment out if categoryAxis is string
+    categoryAxis.labelRotation = 90;
+    setDefaultAxisAttr(categoryAxis,"時刻");	
+	
+	//縦軸
+	setGridOfAxis(valueAxis,max,0,max/5,"#000000");
+	setDefaultAxisAttr(valueAxis, "平均売上数");
+	
+	// LEGEND
+	legend.align = "left";
+	legend.labelText = "[[title]]";
+
+	 //スコロールバーの縦横長さの設定
+    scrollbar.scrollbarHeight = 25;
+    scrollbar.dragIconHeight = 23;
+    scrollbar.dragIconWidth = 12;
+    //スコロールバーの色設定
+    scrollbar.backgroundColor = "#DBDBBF";
+    scrollbar.selectedBackgroundColor = "#5B5B58";
+
+chart.write("chartdiv");
+});
+
+ function setGraph3D(){
+    if (document.getElementById("graph3d_true").checked){
+        set3D(chart, true);
+    } else{
+        set3D(chart, false);
+    }
+    chart.validateNow();
+ }
+
+ function setLabel(){
+    if (document.getElementById("label_hide").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.labelText = "";
+    	});     
+    } else if (document.getElementById("label_show").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.labelText = "[[value]]";
+    	});       
+    }
+    chart.validateNow();
+ }
+ 
+ function setGraphtype(){
+    if (document.getElementById("graphtype_column").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.type = "column";
+    		graph.lineAlpha = 0;
+			graph.fillAlphas = 1;
+			graph.bullet = "";
+			graph.fillColors = colors_arr[i];
+    	});     
+    } else if (document.getElementById("graphtype_line").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.type = "line";
+    		graph.lineAlpha = 1;
+			graph.fillAlphas = 0;
+			graph.bullet = "round";
+			graph.lineColor = colors_arr[i];
+			graph.bulletColor = colors_arr[i];
+    	});       
+    }
+    chart.validateNow();
+ }
+ 
+ //function startTimeChange(){
+ //	alert(document.getElementById("start_dt").value);
+ //}
+ 
+ function submit(){
+ 	$("#form").submit();
+ }
+</script>
+
+<div class="row" >
+	<form id="form">
+	<div class="span4">
+	　　項目名 <select id="typecolumn1" name="typecolumn1">
+			</select></br>
+	　　項目名 <select id="typecolumn2" name="typecolumn2">
+			</select>
+	</div>
+	<div class="span4">
+   		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> <input id="start_hm" type="text" name="start_hm" style="width: 50px;"></br>
+   	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;"> <input id="finish_hm" type="text" name="finish_hm" style="width: 50px">	           
+	</div> 		
+	<div class="span1">
+	  <div class="btn-group" style="width: 100px;">
+	  <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">
+	    <i class="icon-pencil icon-white"></i> 計算
+	    <span class="caret"></span>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li>&nbsp;&nbsp;&nbsp;<i class="icon-list"></i> 計算方法選択</li>
+	    <li class="divider"></li>
+	    <li><a href="javascript:submit()"><i class="icon-play"></i> 合計</a></li>
+	    <li><a href="#"><i class="icon-play"></i> 平均</a></li>
+	    <li><a href="#"><i class="icon-play"></i> 最大最小値</a></li>
+	  </ul>
+	  </div>
+	</div>
+	</form>
+</div>
+
+
+
+<div class="row" style="width: 1100px;">
+	<div class="span2" style="padding-top: 50px;">
+		<input type="radio" checked="true" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
+		<input type="radio" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
+		<input type="radio" checked="true" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
+		<input type="radio" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
+		<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し<br/>
+		<input style="vertical-align: bottom;" type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
+	</div>
+	<div class="span10" id="chartdiv" class="chartdiv" style=" height:450px; width: 900px;"></div>
+</div>
+
+<div id="error_msg" class="alert alert-error" style="position:absolute; top: 0px; left: 720px;  height: 100px; width: 250px;">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4>Warning!</h4>
+  　指定された日付にはデータがない
+  please choose again
+</div>
+
+
+<div class="btn-group">
+  <a class="btn btn-primary" href="#"><i class="icon-pencil icon-white"></i> 計算</a>
+  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
+    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+    <li class="divider"></li>
+    <li><a href="#"><i class="i"></i> Make admin</a></li>
+  </ul>
+</div>
+
+
+
+
