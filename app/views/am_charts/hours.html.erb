@@ -3,16 +3,16 @@
 <%= javascript_include_tag 'bootstrap'%>
 <script type="text/javascript">
 var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
-var names = <%= @json_arr.to_json.html_safe %>
+var names = <%= @json_arr.to_json.html_safe %>;
 var max = <%= @max %>;	
 var headers = <%= @headers.to_json.html_safe%>;
-var type1 = <%= @type1_value.to_json.html_safe%>
-var type2 = <%= @type2_value.to_json.html_safe%>
+var type1 = <%= @type1_value.to_json.html_safe%>;
+var type2 = <%= @type2_value.to_json.html_safe%>;
 var chart;
 var graph;
 
 	//	$("#typecolumn2").find("option[text='"+type2+"']").attr("selected",true);
-	
+
 AmCharts.ready(function() {
 	chart = new AmCharts.AmSerialChart();
 	chart.startDuration = 1;

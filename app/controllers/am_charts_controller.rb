@@ -32,38 +32,39 @@ class AmChartsController < ApplicationController
   end
   
   def hours
-    result_hash = caculate_data("public/data/CSV_2013060100.csv")
-    result = create_json(result_hash)
-    @json_val = result[0]
-    @json_arr = result[1]
-    @max = result[2]
-    @headers = result[3]
     
     if params[:typecolumn2].blank? then
 
     else
-    	session[:typecolumn2] = params[:typecolumn2]
+      session[:typecolumn2] = params[:typecolumn2]
     end
     
     @type2_value = if session[:typecolumn2].blank?
-     	"AIR"
+      "AIR"
     else
-    	session[:typecolumn2]	
+      session[:typecolumn2] 
     end
     
     if params[:typecolumn1].blank? then
 
     else
-    	session[:typecolumn1] = params[:typecolumn1]
+      session[:typecolumn1] = params[:typecolumn1]
     end
     
     @type1_value = if session[:typecolumn1].blank?
-     	"AIR"
+      "AIR"
     else
-    	session[:typecolumn1]	
+      session[:typecolumn1] 
     end
     
-    
+    selHeader_arr = [@type1_value, @type2_value]
+    result_hash = caculate_data("public/data/CSV_2013060100.csv",selHeader_arr)
+    result = create_json(result_hash)
+    @json_val = result[0]
+    @json_arr = result[1]
+    @max = result[2]
+    @headers = result[3]
+   
   end
   
   def hoursSale

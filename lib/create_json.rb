@@ -2,7 +2,10 @@
 require 'csv'
 
 json_val = ""
-def create_json(result_hash)
+def create_json(result_arr)
+  result_hash = result_arr[0]
+  typeHeaders = result_arr[1]
+  
   headers = []
   times = []
   values = []
@@ -41,7 +44,7 @@ def create_json(result_hash)
 
   json_val << "]"
 
-  result << json_val << json_arr << values.max << headers
+  result << json_val << json_arr << values.max << typeHeaders
   return result
 end
 
