@@ -5,6 +5,22 @@ json_val = ""
 def create_json(result_arr)
   result_hash = result_arr[0]
   typeHeaders = result_arr[1]
+  arr_t = result_arr[2]
+  suffix = result_arr[3]
+  
+  #get the initial time to show in html 
+  starttime_dt, starttime_hm = arr_t[0].split(" ")
+  year, month, day = starttime_dt.split("/")
+  starttime_dt = year << "-" << sprintf("%02d", month) << "-"<< sprintf("%02d", day)
+  finishtime_dt, finishtime_hm = arr_t[arr_t.length-1].split(" ")
+  year, month, day = finishtime_dt.split("/")
+  finishtime_dt = year << "-" << sprintf("%02d", month) << "-"<< sprintf("%02d", day)
+  
+  timeshow = []
+  timeshow << starttime_dt << starttime_hm << finishtime_dt << finishtime_hm
+  #*************************************************************************
+  
+  
   
   headers = []
   times = []
@@ -44,7 +60,7 @@ def create_json(result_arr)
 
   json_val << "]"
 
-  result << json_val << json_arr << values.max << typeHeaders
+  result << json_val << json_arr << values.max << typeHeaders << timeshow << suffix
   return result
 end
 

@@ -3,15 +3,21 @@
 <%= javascript_include_tag 'bootstrap'%>
 <script type="text/javascript">
 var chartData = <%= @json_val %>;															//if categoryAxis is string format	add .html_safe											
-var names = <%= @json_arr.to_json.html_safe %>;
-var max = <%= @max %>;	
+var names = <%= @json_arr.to_json.html_safe %>;	
 var headers = <%= @headers.to_json.html_safe%>;
 var type1 = <%= @type1_value.to_json.html_safe%>;
 var type2 = <%= @type2_value.to_json.html_safe%>;
+var timeshow = <%= @timeshow.to_json.html_safe%>;
+var start_dt = <%= @start_dt_html.to_json.html_safe%>;
+var start_hm = <%= @start_hm.to_json.html_safe%>;
+var finish_dt = <%= @finish_dt_html.to_json.html_safe %>;
+var finish_hm = <%= @finish_hm.to_json.html_safe %>;
+var max = <%= @max.to_json.html_safe %> ;
+var suffix = <%= @suffix %>;
 var chart;
 var graph;
 
-	//	$("#typecolumn2").find("option[text='"+type2+"']").attr("selected",true);
+
 
 AmCharts.ready(function() {
 	chart = new AmCharts.AmSerialChart();
@@ -30,7 +36,7 @@ AmCharts.ready(function() {
 	chart.dataProvider = chartData;
 	chart.pathToImages = "/assets/";
 	chart.categoryField = "date";
-	chart.columnWidth = 5;
+	chart.columnWidth = 1;
 	setDefaultPopOfChart(chart);
 
     // GRAPH
@@ -99,9 +105,13 @@ chart.write("chartdiv");
     }
     chart.validateNow();
  }
+ 
+ //function startTimeChange(){
+ //	alert(document.getElementById("start_dt").value);
+ //}
 </script>
 
-<div class="row">
+<div class="row" >
 	<form>
 	<div class="span4">
 	　　項目名 <select id="typecolumn1" name="typecolumn1">
@@ -110,15 +120,16 @@ chart.write("chartdiv");
 			</select>
 	</div>
 	<div class="span4">
-   		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> </br>
-   	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;">
+   		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> <input id="start_hm" type="text" name="start_hm" style="width: 50px;"></br>
+   	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;"> <input id="finish_hm" type="text" name="finish_hm" style="width: 50px">	           
 	</div> 		
-
-	<div class="span1">
-		<input class="btn btn-primary" name="commit" value="確認" type="submit">
+	<div class="span1" ">
+	  <input class="btn btn-primary" name="commit" value="確認" type="submit">
 	</div>
 	</form>
 </div>
+
+
 
 <div class="row" style="width: 1100px;">		
 	<div class="span2">
@@ -133,7 +144,12 @@ chart.write("chartdiv");
 </div>		
 		
 
-
+<div id="error_msg" class="alert alert-error" style="position:absolute; top: 0px; left: 700px;  height: 100px; width: 250px;">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <h4>Warning!</h4>
+  　指定された日付にはデータがない
+  please choose again
+</div>
   
 
 
@@ -143,6 +159,21 @@ chart.write("chartdiv");
 <div class="btn-group">
   <a class="btn btn-primary" href="#"><i class="icon-pencil icon-white"></i> 計算</a>
   <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+  <ul class="dropdown-menu">
+    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
+    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+    <li class="divider"></li>
+    <li><a href="#"><i class="i"></i> Make admin</a></li>
+  </ul>
+</div>
+
+
+<div class="btn-group">
+  <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">
+    <i class="icon-pencil icon-white"></i> Action
+    <span class="caret"></span>
+  </a>
   <ul class="dropdown-menu">
     <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
     <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
