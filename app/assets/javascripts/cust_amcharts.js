@@ -39,28 +39,30 @@ window.onload=function(){
 	
 }
 
-colors_arr = ["#3366CC","#FF6600","#FF9E01","#FCD202","#F8FF01","#B0DE09","#0D8ECF","#0D52D1","#2A0CD0","#754DEB","#999999","#000000"];
+colors_arr = ["#3366CC","#9999FF","#FF9E01","#FCD202","#F8FF01","#B0DE09","#0D8ECF","#0D52D1","#2A0CD0","#754DEB","#999999","#000000"];
 function create_graph(title, valueField,chart,color_index, valueAxis) {
 	graph = new AmCharts.AmGraph();
 	graph.showHandOnHover = true;
 	graph.title = title;
-	if (title == "電気量" || title == "AIR" || title == "KWH" || title == "CO2"){
+	/*
+	if (title == "KWH" || title == "CO2"){
 		graph.type = "line";
 		graph.fillAlphas = 0;
 		graph.lineAlpha = 1;
-		graph.lineColors = colors_arr[color_index]
+		graph.lineColor = colors_arr[color_index]
 		graph.bullet = "round";
 		graph.valueAxis = valueAxis;
 		graph.balloonText = "10分ごと合計　[[value]] ";
 	}else{
-		graph.type = "column";
-		graph.lineAlpha = 0;
-		graph.fillAlphas = 1;
-		graph.fillColors = colors_arr[color_index];
-		graph.balloonText = "平均:　[[value]]";
-	}
-	graph.valueField = valueField;
+	*/
+	graph.type = "column";
+	graph.lineAlpha = 0;
+	graph.fillAlphas = 1;
+	graph.fillColors = colors_arr[color_index];
+	graph.balloonText = "合計:　[[value]]";
 	
+	graph.valueField = valueField;
+	set3D(chart, true);
 
 	//图上标记值
 	//graph.labelText = "true";

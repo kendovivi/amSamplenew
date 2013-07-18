@@ -36,7 +36,7 @@ AmCharts.ready(function() {
 	chart.dataProvider = chartData;
 	chart.pathToImages = "/assets/";
 	chart.categoryField = "date";
-	chart.columnWidth = 1;
+	chart.columnWidth = 0.8;
 	setDefaultPopOfChart(chart);
 
     // GRAPH
@@ -95,12 +95,17 @@ chart.write("chartdiv");
     		graph.type = "column";
     		graph.lineAlpha = 0;
 			graph.fillAlphas = 1;
+			graph.bullet = "";
+			graph.fillColors = colors_arr[i];
     	});     
     } else if (document.getElementById("graphtype_line").checked){
     	$.each(chart.graphs,function(i,graph){
     		graph.type = "line";
     		graph.lineAlpha = 1;
 			graph.fillAlphas = 0;
+			graph.bullet = "round";
+			graph.lineColor = colors_arr[i];
+			graph.bulletColor = colors_arr[i];
     	});       
     }
     chart.validateNow();
@@ -109,10 +114,14 @@ chart.write("chartdiv");
  //function startTimeChange(){
  //	alert(document.getElementById("start_dt").value);
  //}
+ 
+ function submit(){
+ 	$("#form").submit();
+ }
 </script>
 
 <div class="row" >
-	<form>
+	<form id="form">
 	<div class="span4">
 	　　項目名 <select id="typecolumn1" name="typecolumn1">
 			</select></br>
@@ -123,38 +132,45 @@ chart.write("chartdiv");
    		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> <input id="start_hm" type="text" name="start_hm" style="width: 50px;"></br>
    	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;"> <input id="finish_hm" type="text" name="finish_hm" style="width: 50px">	           
 	</div> 		
-	<div class="span1" ">
-	  <input class="btn btn-primary" name="commit" value="確認" type="submit">
+	<div class="span1">
+	  <div class="btn-group" style="width: 100px;">
+	  <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">
+	    <i class="icon-pencil icon-white"></i> 計算
+	    <span class="caret"></span>
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li>&nbsp;&nbsp;&nbsp;<i class="icon-list"></i> 計算方法選択</li>
+	    <li class="divider"></li>
+	    <li><a href="javascript:submit()"><i class="icon-play"></i> 合計</a></li>
+	    <li><a href="#"><i class="icon-play"></i> 平均</a></li>
+	    <li><a href="#"><i class="icon-play"></i> 最大最小値</a></li>
+	  </ul>
+	  </div>
 	</div>
 	</form>
 </div>
 
 
 
-<div class="row" style="width: 1100px;">		
-	<div class="span2">
-		<input type="radio" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
-		<input type="radio" checked="true" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
-		<input type="radio" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
-		<input type="radio" checked="true" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
-		<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し
-		<input type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
+<div class="row" style="width: 1100px;">
+	<div class="span2" style="padding-top: 50px;">
+		<input type="radio" checked="true" name="graph3d" id="graph3d_true" onclick="setGraph3D()">3D
+		<input type="radio" name="graph3d" id="graph3d_false" onclick="setGraph3D()">2D　<br/><br/>
+		<input type="radio" checked="true" name="graphtype" id="graphtype_column" onclick="setGraphtype()">column
+		<input type="radio" name="graphtype" id="graphtype_line" onclick="setGraphtype()">line　<br/><br/>
+		<input type="radio" checked="true" name="showLable" id="label_hide" onclick="setLabel()">ラベルを隠し<br/>
+		<input style="vertical-align: bottom;" type="radio" name="showLable" id="label_show" onclick="setLabel()">ラベルを表示
 	</div>
 	<div class="span10" id="chartdiv" class="chartdiv" style=" height:450px; width: 900px;"></div>
-</div>		
-		
+</div>
 
-<div id="error_msg" class="alert alert-error" style="position:absolute; top: 0px; left: 700px;  height: 100px; width: 250px;">
+<div id="error_msg" class="alert alert-error" style="position:absolute; top: 0px; left: 720px;  height: 100px; width: 250px;">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <h4>Warning!</h4>
   　指定された日付にはデータがない
   please choose again
 </div>
-  
 
-
-      
-     
 
 <div class="btn-group">
   <a class="btn btn-primary" href="#"><i class="icon-pencil icon-white"></i> 計算</a>
@@ -169,17 +185,5 @@ chart.write("chartdiv");
 </div>
 
 
-<div class="btn-group">
-  <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">
-    <i class="icon-pencil icon-white"></i> Action
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu">
-    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
-    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
-    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
-    <li class="divider"></li>
-    <li><a href="#"><i class="i"></i> Make admin</a></li>
-  </ul>
-</div>
+
 
