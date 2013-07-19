@@ -5,95 +5,151 @@ require 'time'
 #CSV ファイルを読み込み、指定された計算を行う。結果をHashフォーマットでam_charts_controllerに返す
 #Input file_path
 #Return result_hash
-def calculate_data(file_path,selHeader_arr, selTime_arr)
+class Cal
+  def calculate_data(file_path,selHeader_arr, selTime_arr)
+    
+    #load csv file
+    headers, *scores = CSV.read(file_path)
+    arr_t, *arr_v = scores.transpose                                  #arr_tは入りかえる前の第一列（時間）, arr_vは入りかえる前の第二以後の列（温度）
+    header_index_hash = {}
   
-  #load csv file
-  headers, *scores = CSV.read(file_path)
-  arr_t, *arr_v = scores.transpose                                  #arr_tは入りかえる前の第一列（時間）, arr_vは入りかえる前の第二以後の列（温度）
-  header_index_hash = {}
-
-
-  #set parameters
-  selHeader_arr = ["AIR","KWH"] if selHeader_arr == []              #set default for selHeader_arr
-  selTime_arr = ["2013/6/1 0:40", "2013/6/1 0:59"] if selTime_arr == []         # set default for selTime_arr
-  arr_t_selIndex = [arr_t.rindex("#{selTime_arr[0]}"),arr_t.rindex("#{selTime_arr[1]}")]
-  suffix = if arr_t.rindex("#{selTime_arr[0]}").blank? || arr_t.rindex("#{selTime_arr[1]}").blank? 
-    1
-  else 
-    0 
+  
+    #set parameters
+    #selHeader_arr = ["AIR","KWH"] if selHeader_arr == []              #set default for selHeader_arr
+    #selTime_arr = ["2013/6/5 0:40", "2013/6/5 0:59"] if selTime_arr == nil         # set default for selTime_arr
+    arr_t_selIndex = [arr_t.rindex("#{selTime_arr[0]}"),arr_t.rindex("#{selTime_arr[1]}")]
+    suffix = if arr_t.rindex("#{selTime_arr[0]}").blank? || arr_t.rindex("#{selTime_arr[1]}").blank? 
+      1
+    else 
+      0 
+    end
+    timePeriod = 2      
+    # set header index hash 
+    headers.each_with_index{|header,i|  
+      next if i == 0
+      header_index_hash["#{header}"] = i 
+    }
+    
+    
+    #***********************************start calculating**************************************
+    #result_hash[:headerName] = arr_v[]
+    result_hash = add(arr_v, arr_t, selHeader_arr, arr_t_selIndex, header_index_hash, timePeriod, suffix)  
+    #***********************************finish calculating**************************************
+    
+    
+    #***********************************result**************************************  
+    result = []
+    result << result_hash << headers[1..headers.length] << arr_t << suffix    #2013/07/19 @wang test
+    #result << result_hash << headers[1..headers.length] << arr_t
+    #result << testresult  
+    #***********************************result**************************************
+    
+    return result
   end
   
   
-  result_hash = {}                                                  #result_hash[:headerName] = arr_v[]
   
   
-  # set header index hash 
-  headers.each_with_index{|header,i|  
-    next if i == 0
-    header_index_hash["#{header}"] = i 
-  }
-   
-   
-#**********start calculate*************                                    
-  selHeader_arr.each_with_index {|selHeader, i|                        #caculate avg in 10 mins
-    break if suffix == 1                                               
-    index = header_index_hash["#{selHeader}"]                          #get the index of header from hash
-   
-    flag = 10
-    k = arr_t_selIndex[0]
-    selLength = arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length
-    selLength / flag == 0? cnt = 1: cnt = selLength / flag     #garentee at least 1 cnt       
-    lastcnt = selLength % flag
+  def add(value_arr, time_arr, selHeader_arr, selTimeIndex_arr, header_index_hash, timePeriodtoCal, suffix)
     
+    result_hash = {}
+    timeStartIndex = selTimeIndex_arr[0]
+    timeLastIndex = selTimeIndex_arr[1]
+    selTimePeriodLength = time_arr[timeStartIndex..timeLastIndex].length
+    selTimePeriodLength / timePeriodtoCal == 0? cnt = 1: cnt = selTimePeriodLength / timePeriodtoCal     #garentee at least 1 cnt       
+    lastcnt = selTimePeriodLength % timePeriodtoCal
     
-    lastSub = 0
-    cnt.times do |cnt_index|
-      sub = 0 
+    #start calculate***************************************
+    selHeader_arr.each_with_index{|selHeader, i|
+      headerIndex = header_index_hash["#{selHeader}"]
+      break if suffix == 1                                                #can not find data error
       
-      f = k + flag-1
-      f = k + lastcnt if f - k > selLength
-      
-      arr_t[k..f].each_with_index{|pass, j|  
-         sub += arr_v[index-1][k+j].to_i
-         j += 1      
-      }
+      timeStartIndex = selTimeIndex_arr[0]
+      cnt.times do |j|
+        sub = 0
+        f = timeStartIndex + timePeriodtoCal - 1
+        f = timeStartIndex + lastcnt if f - timeStartIndex > selTimePeriodLength
         
-      time = Time.parse(arr_t[k]).to_i.to_s                #change to time format if the 1st column is date format
-      #time = arr_t[k]                                     #do nothing if the 1st column is string format
-      result_hash["#{selHeader},#{time}"] = if selHeader == "AIR"
-        if cnt_index == 0 && cnt != 1
-          0
-        elsif cnt == 1
-          arr_v[index-1][f].to_i - arr_v[index-1][k].to_i
+        time_arr[timeStartIndex..f].each_with_index{|pass, t|
+          sub += value_arr[headerIndex - 1][timeStartIndex + t].to_i
+          t += 1
+        }
+        x = timeStartIndex
+        time = Time.parse(time_arr[timeStartIndex]).to_i.to_s                  #change to time format if the 1st column is date format
+        #time = arr_t[k]                                                    #do nothing if the 1st column is string format
+        
+        result_hash["#{selHeader},#{time}"] = if selHeader == "AIR"
+          if j == 0 && cnt != 1
+            0
+          elsif cnt == 1
+            value_arr[headerIndex-1][f].to_i - value_arr[headerIndex-1][timeStartIndex].to_i
+          else
+            value_arr[headerIndex-1][f].to_i - value_arr[headerIndex-1][timeStartIndex-1].to_i
+          end
         else
-          arr_v[index-1][f].to_i - arr_v[index-1][k-1].to_i
+          sub
         end
-      else
-        sub
-      end
-      lastSub = sub
-      k += flag
-    end
-
-
-=begin     
-    arr_t.each_with_index{|t, j|
-      time = Time.parse(t).to_i.to_s
-      #time = arr_t[j]  
-      result_hash["#{header},#{time}"] = arr_v[i-1][j]    #put all results into result_hash
+        
+        timeStartIndex += timePeriodtoCal
+      end   
     }
-=end
-}
-#**********calculate finished*************
-
-result = []
-result << result_hash << headers[1..headers.length] << arr_t << suffix    #2013/07/19 @wang test
-#result << result_hash << headers[1..headers.length] << arr_t
-return result
+    #finish calculate**************************************
+    
+    return result_hash
+  
+  end
+  
+  def average()
+    result_hash = {}
+    timeStartIndex = selTimeIndex_arr[0]
+    timeLastIndex = selTimeIndex_arr[1]
+    selTimePeriodLength = time_arr[timeStartIndex..timeLastIndex].length
+    selTimePeriodLength / timePeriodtoCal == 0? cnt = 1: cnt = selTimePeriodLength / timePeriodtoCal     #garentee at least 1 cnt       
+    lastcnt = selTimePeriodLength % timePeriodtoCal
+    
+    #start calculate***************************************
+    selHeader_arr.each_with_index{|selHeader, i|
+      headerIndex = header_index_hash["#{selHeader}"]
+      break if suffix == 1                                                #can not find data error
+      
+      timeStartIndex = selTimeIndex_arr[0]
+      cnt.times do |j|
+        sub = 0
+        f = timeStartIndex + timePeriodtoCal - 1
+        f = timeStartIndex + lastcnt if f - timeStartIndex > selTimePeriodLength
+        
+        time_arr[timeStartIndex..f].each_with_index{|pass, t|
+          sub += value_arr[headerIndex - 1][timeStartIndex + t].to_i
+          t += 1
+        }
+        x = timeStartIndex
+        time = Time.parse(time_arr[timeStartIndex]).to_i.to_s                  #change to time format if the 1st column is date format
+        #time = arr_t[k]                                                       #do nothing if the 1st column is string format
+        
+        result_hash["#{selHeader},#{time}"] = if selHeader == "AIR"
+          if j == 0 && cnt != 1
+            0
+          elsif cnt == 1
+            value_arr[headerIndex-1][f].to_i - value_arr[headerIndex-1][timeStartIndex].to_i
+          else
+            value_arr[headerIndex-1][f].to_i - value_arr[headerIndex-1][timeStartIndex-1].to_i
+          end
+        else
+          sub
+        end
+        
+        timeStartIndex += timePeriodtoCal
+      end   
+    }
+    #finish calculate**************************************
+    
+    return result_hash
+    
+  end 
 end
+
 
 #arr = ["AIR","KWH"]
 #selTime_arr = ["2013/6/5 0:00", "2013/6/5 0:59"]
-
-#puts calculate_data("../public/data/CSV_2013060500.csv", arr, selTime_arr)
-
+  
+#puts Cal.new.calculate_data("../public/data/CSV_2013060500.csv", arr, selTime_arr)

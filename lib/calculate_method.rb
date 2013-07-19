@@ -14,7 +14,7 @@ def add(value_arr, time_arr, selHeader_arr, selTimeIndex_arr, header_index_hash,
   
   #start calculate***************************************
   selHeader_arr.each_with_index{|selHeader, i|
-    headerIndex = header_index_hash["#selHeader"]
+    headerIndex = header_index_hash["#{selHeader}"]
     
     break if suffix == 1                                                  #can not find data error
     cnt.times do |j|
@@ -24,10 +24,10 @@ def add(value_arr, time_arr, selHeader_arr, selTimeIndex_arr, header_index_hash,
       f = timeStartIndex + lastcnt if f - timeStartIndex > selTimePeriodLength
       
       time_arr[timeStartIndex..f].each_with_index{|pass, t|
-        sub += value_arr[headerIndex-1][timeStartIndex + t]
+        sub += value_arr[headerIndex - 1][timeStartIndex + t].to_i
         t += 1
       }
-      time = Time.parse(arr_t[timeStartIndex]).to_i.to_s                  #change to time format if the 1st column is date format
+      time = Time.parse(time_arr[timeStartIndex]).to_i.to_s                  #change to time format if the 1st column is date format
       #time = arr_t[k]                                                    #do nothing if the 1st column is string format
       
       result_hash["#{selHeader},#{time}"] = if selHeader == "AIR"

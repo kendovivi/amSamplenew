@@ -66,7 +66,7 @@ class AmChartsController < ApplicationController
     end
     
     @start_dt = if session[:start_dt].blank?
-      "2013/6/1"
+      "2013/6/5"
     else
       @start_dt_html = session[:start_dt]
       year, month, day = session[:start_dt].split("-")
@@ -81,7 +81,7 @@ class AmChartsController < ApplicationController
     end
     
     @finish_dt = if session[:finish_dt].blank?
-      "2013/6/1"
+      "2013/6/5"
     else
       @finish_dt_html = session[:finish_dt]
       year, month, day = session[:finish_dt].split("-")
@@ -121,7 +121,7 @@ class AmChartsController < ApplicationController
     
     selHeader_arr = [@type1_value, @type2_value]
     selTime_arr = ["#{@start_dt} #{@start_hm}", "#{@finish_dt} #{@finish_hm}"]
-    result_hash = calculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
+    result_hash = Cal.new.calculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
