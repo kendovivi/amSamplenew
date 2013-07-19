@@ -1,16 +1,16 @@
 require 'create_json'
-require 'caculate_data'
+require 'calculate_data'
 
 class AmChartsController < ApplicationController
   def mygraph
-    result_hash = caculate_data("public/data/temp.csv")
+    result_hash = calculate_data("public/data/temp.csv")
 	  result = create_json(result_hash)
 	  @json_val = result[0]
 	  @json_arr = result[1]
   end
   
   def month
-    result_hash = caculate_data("public/data/month.csv")
+    result_hash = calculate_data("public/data/month.csv")
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
@@ -18,14 +18,14 @@ class AmChartsController < ApplicationController
   end
   
   def week
-    result_hash = caculate_data("public/data/week.csv")
+    result_hash = calculate_data("public/data/week.csv")
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
   end
   
   def weekInHours
-    result_hash = caculate_data("public/data/weekinhours.csv")
+    result_hash = calculate_data("public/data/weekinhours.csv")
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
@@ -121,7 +121,7 @@ class AmChartsController < ApplicationController
     
     selHeader_arr = [@type1_value, @type2_value]
     selTime_arr = ["#{@start_dt} #{@start_hm}", "#{@finish_dt} #{@finish_hm}"]
-    result_hash = caculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
+    result_hash = calculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
@@ -133,7 +133,7 @@ class AmChartsController < ApplicationController
   end
   
   def hoursSale
-    result_hash = caculate_data("public/data/hoursSale.csv")
+    result_hash = calculate_data("public/data/hoursSale.csv")
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]

@@ -2,11 +2,10 @@
 require 'csv'
 require 'time'
 
-
 #CSV ファイルを読み込み、指定された計算を行う。結果をHashフォーマットでam_charts_controllerに返す
 #Input file_path
 #Return result_hash
-def caculate_data(file_path,selHeader_arr, selTime_arr)
+def calculate_data(file_path,selHeader_arr, selTime_arr)
   
   #load csv file
   headers, *scores = CSV.read(file_path)
@@ -96,5 +95,5 @@ end
 #arr = ["AIR","KWH"]
 #selTime_arr = ["2013/6/5 0:00", "2013/6/5 0:59"]
 
-#puts caculate_data("../public/data/CSV_2013060500.csv", arr, selTime_arr)
+#puts calculate_data("../public/data/CSV_2013060500.csv", arr, selTime_arr)
 
