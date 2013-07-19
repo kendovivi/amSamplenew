@@ -46,19 +46,33 @@ def caculate_data(file_path,selHeader_arr, selTime_arr)
     selLength / flag == 0? cnt = 1: cnt = selLength / flag     #garentee at least 1 cnt       
     lastcnt = selLength % flag
     
-    cnt.times do
+    
+    lastSub = 0
+    cnt.times do |cnt_index|
       sub = 0 
+      
       f = k + flag-1
       f = k + lastcnt if f - k > selLength
       
-      arr_t[k..f].each_with_index{|pass, j|                                     
-         sub += arr_v[index-1][k+j].to_i 
+      arr_t[k..f].each_with_index{|pass, j|  
+         sub += arr_v[index-1][k+j].to_i
          j += 1      
       }
         
       time = Time.parse(arr_t[k]).to_i.to_s                #change to time format if the 1st column is date format
       #time = arr_t[k]                                     #do nothing if the 1st column is string format
-      result_hash["#{selHeader},#{time}"] = sub
+      result_hash["#{selHeader},#{time}"] = if selHeader == "AIR"
+        if cnt_index == 0 && cnt != 1
+          0
+        elsif cnt == 1
+          arr_v[index-1][f].to_i - arr_v[index-1][k].to_i
+        else
+          arr_v[index-1][f].to_i - arr_v[index-1][k-1].to_i
+        end
+      else
+        sub
+      end
+      lastSub = sub
       k += flag
     end
 
@@ -80,7 +94,7 @@ return result
 end
 
 #arr = ["AIR","KWH"]
-#selTime_arr = ["2013/6/1 0:40", "2013/6/1 0:59"]
+#selTime_arr = ["2013/6/5 0:00", "2013/6/5 0:59"]
 
-#puts caculate_data("../public/data/CSV_2013060100.csv", arr, selTime_arr)
+#puts caculate_data("../public/data/CSV_2013060500.csv", arr, selTime_arr)
 

@@ -89,7 +89,7 @@ function setGridOfAxis(axis, max, min, step, color) {
 
     axis.autoGridCount = false;
     axis.gridCount = axis.maximum / step;
-    axis.gridColor = color;
+    axis.gridColor = "#ffffff";
 }
 
 //軸の共通設定
