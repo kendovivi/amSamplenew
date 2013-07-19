@@ -16,7 +16,7 @@ def caculate_data(file_path,selHeader_arr, selTime_arr)
 
   #set parameters
   selHeader_arr = ["AIR","KWH"] if selHeader_arr == []              #set default for selHeader_arr
-  selTime_arr = ["2013/6/1 0:10", "2013/6/1 0:29"] if selTime_arr == []         # set default for selTime_arr
+  selTime_arr = ["2013/6/1 0:40", "2013/6/1 0:59"] if selTime_arr == []         # set default for selTime_arr
   arr_t_selIndex = [arr_t.rindex("#{selTime_arr[0]}"),arr_t.rindex("#{selTime_arr[1]}")]
   suffix = if arr_t.rindex("#{selTime_arr[0]}").blank? || arr_t.rindex("#{selTime_arr[1]}").blank? 
     1
@@ -37,25 +37,24 @@ def caculate_data(file_path,selHeader_arr, selTime_arr)
    
 #**********start calculate*************                                    
   selHeader_arr.each_with_index {|selHeader, i|                        #caculate avg in 10 mins
-    break if suffix == 1
+    break if suffix == 1                                               
     index = header_index_hash["#{selHeader}"]                          #get the index of header from hash
    
-    flag = 1
+    flag = 10
     k = arr_t_selIndex[0]
-    arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length / flag == 0? cnt = 1: cnt = arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length / flag     #garentee at least 1 cnt       
-    lastcnt = arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length % flag
+    selLength = arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length
+    selLength / flag == 0? cnt = 1: cnt = selLength / flag     #garentee at least 1 cnt       
+    lastcnt = selLength % flag
     
     cnt.times do
-      sub = 0; 
+      sub = 0 
+      f = k + flag-1
+      f = k + lastcnt if f - k > selLength
       
-      f = k + 0
-      if f > arr_t[arr_t_selIndex[0]..arr_t_selIndex[1]].length
-        f= k + lastcnt
-      end
-      
-      arr_t[k..f].each do                                       
-         sub += arr_v[index-1][k].to_i       
-      end
+      arr_t[k..f].each_with_index{|pass, j|                                     
+         sub += arr_v[index-1][k+j].to_i 
+         j += 1      
+      }
         
       time = Time.parse(arr_t[k]).to_i.to_s                #change to time format if the 1st column is date format
       #time = arr_t[k]                                     #do nothing if the 1st column is string format
@@ -75,13 +74,13 @@ def caculate_data(file_path,selHeader_arr, selTime_arr)
 #**********calculate finished*************
 
 result = []
-result << result_hash << headers[1..headers.length] << arr_t << suffix
-p = 1
+result << result_hash << headers[1..headers.length] << arr_t << suffix    #2013/07/19 @wang test
+#result << result_hash << headers[1..headers.length] << arr_t
 return result
 end
 
-#arr = []
-#selTime_arr = []
+#arr = ["AIR","KWH"]
+#selTime_arr = ["2013/6/1 0:40", "2013/6/1 0:59"]
 
 #puts caculate_data("../public/data/CSV_2013060100.csv", arr, selTime_arr)
 

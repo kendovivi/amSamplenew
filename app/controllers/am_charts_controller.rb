@@ -121,7 +121,7 @@ class AmChartsController < ApplicationController
     
     selHeader_arr = [@type1_value, @type2_value]
     selTime_arr = ["#{@start_dt} #{@start_hm}", "#{@finish_dt} #{@finish_hm}"]
-    result_hash = caculate_data("public/data/CSV_2013060100.csv", selHeader_arr, selTime_arr)
+    result_hash = caculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
     result = create_json(result_hash)
     @json_val = result[0]
     @json_arr = result[1]
