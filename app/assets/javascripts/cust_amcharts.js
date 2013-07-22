@@ -1,46 +1,68 @@
 
-//html initialize
-window.onload=function(){
+//amchartsに関する
+//**********************************************
+//図を作成する
+//**********************************************
+AmCharts.ready(function() {
+	chart = new AmCharts.AmSerialChart();
+	chart.startDuration = 1;
+	graph = new AmCharts.AmGraph();
+	var categoryAxis = chart.categoryAxis;
+	var valueAxis = new AmCharts.ValueAxis();
+	chart.addValueAxis(valueAxis);
+	var valueAxis2 = new AmCharts.ValueAxis();
+	chart.addValueAxis(valueAxis2);
+	var legend = new AmCharts.AmLegend();
+	chart.addLegend(legend);
+	var scrollbar = new AmCharts.ChartScrollbar()
+	chart.addChartScrollbar(scrollbar);              
+    var chartCursor = new AmCharts.ChartCursor();
+    chart.addChartCursor(chartCursor);
 	
-	if (suffix == 1){
-		$("#error_msg").show();
-	}else {
-		$("#error_msg").hide();
-	}
-	//***********************************************
-	//set selectors 
-	$.each(headers,function(i,header){
-		$("#typecolumn1").append($('<option>', { 
-	        value: header,
-	        text : header 
-    	}));
-		$("#typecolumn2").append($('<option>', { 
-	        value: header,
-	        text : header 
-        }));
-	});	
-	//set initial value
-	$("#typecolumn2").val(type2);
-	$("#typecolumn1").val(type1);
-	//***********************************************	
-	
-	//***********************************************
-	// set times 
-    //document.getElementById('start_dt').value = timeshow[0];
-    //document.getElementById('start_hm').value = timeshow[1];
-	//document.getElementById('finish_dt').value = timeshow[2];
-	//document.getElementById('finish_hm').value = timeshow[3];
-	document.getElementById('start_dt').value = start_dt;
-    document.getElementById('start_hm').value = start_hm;
-	document.getElementById('finish_dt').value = finish_dt;
-	document.getElementById('finish_hm').value = finish_hm;
-	
-	//***********************************************
-	
-}
+	chart.dataProvider = chartData;
+	chart.pathToImages = "/assets/";
+	chart.categoryField = "date";
+	chart.columnWidth = 0.5;
+	setDefaultPopOfChart(chart);
 
+    // GRAPH
+	$.each(names, function(i, name) {create_graph(name[0], name[1],chart,i, valueAxis2); i += 1;});
+	
+	//横軸
+	chart.categoryAxis.parseDates = true;								//comment out if categoryAxis is string
+	chart.categoryAxis.minPeriod = "mm";								//comment out if categoryAxis is string
+    categoryAxis.labelRotation = 90;
+    setDefaultAxisAttr(categoryAxis,"時刻");	
+	
+	//縦軸
+	//setGridOfAxis(valueAxis,max,0,max/5,"#000000");
+	setGridOfAxis(valueAxis,50,0,10,"#000000");
+	setDefaultAxisAttr(valueAxis, "平均売上数");
+	setGridOfAxis(valueAxis2,10000,0,2000,"#000000");
+	setDefaultAxisAttr(valueAxis2, "平均売上数");
+	valueAxis2.position = "right";
+	
+	// LEGEND
+	legend.align = "left";
+	legend.labelText = "[[title]]";
+
+	 //スコロールバーの縦横長さの設定
+    scrollbar.scrollbarHeight = 25;
+    scrollbar.dragIconHeight = 23;
+    scrollbar.dragIconWidth = 12;
+    //スコロールバーの色設定
+    scrollbar.backgroundColor = "#DBDBBF";
+    scrollbar.selectedBackgroundColor = "#5B5B58";
+
+chart.write("chartdiv");
+});
+
+
+//**********************************************
+//グラフを定義する
+//**********************************************
 colors_arr = ["#3366CC","#FF9E01","#9999FF","#FCD202","#F8FF01","#B0DE09","#0D8ECF","#0D52D1","#2A0CD0","#754DEB","#999999","#000000"];
-function create_graph(title, valueField,chart,color_index, valueAxis) {
+　function create_graph(title, valueField,chart,color_index, valueAxis) {
 	graph = new AmCharts.AmGraph();
 	graph.showHandOnHover = true;
 	graph.title = title;
@@ -66,10 +88,54 @@ function create_graph(title, valueField,chart,color_index, valueAxis) {
 	//图上标记值
 	//graph.labelText = "true";
 	//graph.showAllValueLabels = true;
-	chart.addGraph(graph);
-	
-}
+	chart.addGraph(graph);	
+　}
 
+
+ function setGraph3D(){
+    if (document.getElementById("graph3d_true").checked){
+        set3D(chart, true);
+    } else{
+        set3D(chart, false);
+    }
+    chart.validateNow();
+ }
+
+ function setLabel(){
+    if (document.getElementById("label_hide").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.labelText = "";
+    	});     
+    } else if (document.getElementById("label_show").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.labelText = "[[value]]";
+    	});       
+    }
+    chart.validateNow();
+ }
+ 
+ function setGraphtype(){
+    if (document.getElementById("graphtype_column").checked){
+        $.each(chart.graphs,function(i,graph){
+    		graph.type = "column";
+    		graph.lineAlpha = 0;
+			graph.fillAlphas = 1;
+			graph.bullet = "";
+			graph.fillColors = colors_arr[i];
+    	});     
+    } else if (document.getElementById("graphtype_line").checked){
+    	$.each(chart.graphs,function(i,graph){
+    		graph.type = "line";
+    		graph.lineAlpha = 1;
+			graph.fillAlphas = 0;
+			graph.bullet = "round";
+			graph.lineColor = colors_arr[i];
+			graph.bulletColor = colors_arr[i];
+    	});       
+    }
+    chart.validateNow();
+ }
+ 
 function set3D(chart,suffix){
 	if (suffix) {
         chart.depth3D = 8; 

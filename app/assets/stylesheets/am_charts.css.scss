@@ -4,14 +4,21 @@
 @import "bootstrap";
 
 
-/* container*/
-.row{
+/* body */
+.all {
+  position: absolute;
+  top: 80px;
+  left: 150px;
+}
+
+.row {
+  //border: 1px solid #000000;
   padding-bottom: 40px;
 }
 
-/* header* /
+/* header */
 
-/* footer*/
+/* footer */
 
 footer {
   font-size: 1.1em;

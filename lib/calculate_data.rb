@@ -6,6 +6,16 @@ require 'time'
 #Input file_path
 #Return result_hash
 class Cal
+  
+  #********************************************************
+  #メソッド名 : getResult
+  #Input  : ファイルパス, 選択された項目名, 選択された時間
+  #Output : 計算結果のhash, 項目配列, 時間配列, suffix
+  #********************************************************
+  def getResult(file_path,selHeader_arr, selTime_arr)
+    return calculate_data(file_path,selHeader_arr, selTime_arr)  
+  end
+  
   def calculate_data(file_path,selHeader_arr, selTime_arr)
     
     #load csv file
@@ -47,17 +57,16 @@ class Cal
     return result
   end
   
-  
-  
-  
   def add(value_arr, time_arr, selHeader_arr, selTimeIndex_arr, header_index_hash, timePeriodtoCal, suffix)
     
     result_hash = {}
     timeStartIndex = selTimeIndex_arr[0]
     timeLastIndex = selTimeIndex_arr[1]
+    if suffix == 0 
     selTimePeriodLength = time_arr[timeStartIndex..timeLastIndex].length
     selTimePeriodLength / timePeriodtoCal == 0? cnt = 1: cnt = selTimePeriodLength / timePeriodtoCal     #garentee at least 1 cnt       
     lastcnt = selTimePeriodLength % timePeriodtoCal
+    end
     
     #start calculate***************************************
     selHeader_arr.each_with_index{|selHeader, i|
@@ -100,11 +109,13 @@ class Cal
   end
   
   def average(){}
+
     #finish calculate**************************************
     
     return result_hash
     
   end 
+
 end
 
 
