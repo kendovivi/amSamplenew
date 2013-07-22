@@ -5,34 +5,14 @@
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-  
-  <!--[if it IE 9]>
-  	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif] -->
-  
+  <%= render 'layouts/shim' %>
   </head>
-  
-  
-  
-  
-  <body>
-    <header class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <h2><%= link_to " AmCharts Sample 07/18", "#" %></h2>
-          <nav>
-          	<ul class="nav pull-left">
-              <li><a href="http://localhost:3000/"><i class="icon-home icon-white"></i> Home</a></li>
-              <li><a href="http://localhost:3000/"><i class="icon-signal icon-white"></i> サンプル</a></li>
-              <li><%= link_to "Help",    'http://www.amcharts.com/' %></li>
-            </ul>  	
-          </nav>
-        </div>
-      </div>
-    </header>
 
+  <body>
+	<%= render 'layouts/header' %>
     <div class="container" style="position: absolute; top: 100px; left: 150px;">
       <%= yield %>
+      <!--<%= render 'layouts/footer' %>-->
 	</div>
   </body>
 </html>

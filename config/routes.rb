@@ -1,12 +1,8 @@
 AmchartsExample::Application.routes.draw do
   #get "am_charts/mygraph"
   root :to => 'am_charts#welcome'
-  match '/mygraph', to: 'am_charts#mygraph'
-  match '/month', to: 'am_charts#month'
-  match '/week', to: 'am_charts#week'
-  match '/weekinhours', to: 'am_charts#weekInHours'
   match '/hours', to: 'am_charts#hours'
-  match '/hoursSale', to: 'am_charts#hoursSale'
+
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

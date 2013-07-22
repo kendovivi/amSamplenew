@@ -2,37 +2,12 @@ require 'create_json'
 require 'calculate_data'
 
 class AmChartsController < ApplicationController
-  def mygraph
-    result_hash = calculate_data("public/data/temp.csv")
-	  result = create_json(result_hash)
-	  @json_val = result[0]
-	  @json_arr = result[1]
-  end
   
-  def month
-    result_hash = calculate_data("public/data/month.csv")
-    result = create_json(result_hash)
-    @json_val = result[0]
-    @json_arr = result[1]
-    @max = result[2]
-  end
-  
-  def week
-    result_hash = calculate_data("public/data/week.csv")
-    result = create_json(result_hash)
-    @json_val = result[0]
-    @json_arr = result[1]
-  end
-  
-  def weekInHours
-    result_hash = calculate_data("public/data/weekinhours.csv")
-    result = create_json(result_hash)
-    @json_val = result[0]
-    @json_arr = result[1]
+  def welcome   
   end
   
   def hours
-    # ************************get selector value***************************
+    # ************************get selector sessions 【選択された項目名】***************************
     if params[:typecolumn1].blank? then
 
     else
@@ -58,7 +33,7 @@ class AmChartsController < ApplicationController
     end
     # **********↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*********
     
-    # ************************get time value***************************
+    # ************************get selector sessions 【選択された日付と時間】***************************
     if params[:start_dt].blank? then
 
     else
@@ -112,13 +87,11 @@ class AmChartsController < ApplicationController
       "0:59"
     else
       session[:finish_hm]
-    end
-    
-    
-    
+    end 
     # **********↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*********
     
     
+    # ************************計算メソッドとcreate_json()を呼び出し***************************
     selHeader_arr = [@type1_value, @type2_value]
     selTime_arr = ["#{@start_dt} #{@start_hm}", "#{@finish_dt} #{@finish_hm}"]
     result_hash = Cal.new.calculate_data("public/data/CSV_2013060500.csv", selHeader_arr, selTime_arr)
@@ -130,17 +103,5 @@ class AmChartsController < ApplicationController
     @timeshow = result[4]
     @suffix = result[5]
    
-  end
-  
-  def hoursSale
-    result_hash = calculate_data("public/data/hoursSale.csv")
-    result = create_json(result_hash)
-    @json_val = result[0]
-    @json_arr = result[1]
-  end
-  
-  def welcome
-    
-  end
-  
+  end 
 end
