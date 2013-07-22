@@ -31,30 +31,48 @@ var graph;
 <div class="row" >
 	<form id="form">
 		
-	<!-- new -->
-	<div class="btn-group">
-	  <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-	    項目名
-	    <span class="caret"></span>
-	  </a>
-	  <ul class="dropdown-menu" id="ul" style="text-align: center;">
-	    <!-- find dropdown menu in form.js -->
-	  </ul>
-	</div>
-	<!-- new -->
+	
 	
 	<div class="span4">
-	　　項目名 <select style="border: 1px solid blue"   id="typecolumn1" name="typecolumn1"></select></br>
-	　　項目名 <select id="typecolumn2" name="typecolumn2"></select>
+		<!-- new -->
+		<div class="input-prepend">
+			<div class="btn-group">
+			  <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+			    <i class="icon-list-alt icon-white"></i>  項目名
+			    <span class="caret"></span>
+			  </a>
+			  <ul class="dropdown-menu" id="ul1" style="text-align: center;">
+			    <!-- find dropdown menu in form.js -->
+			  </ul>
+			  <input id="typecolumn1" name="typecolumn1" type="text" placeholder="  項目名を選択してください　" style="width: 150px;">
+			</div>
+		</div>
+		
+		<div class="input-prepend">
+			<div class="btn-group">
+			  <a class="btn btn-info dropdown-toggle" data-toggle="dropdown" href="#">
+			    <i class="icon-list-alt icon-white"></i>  項目名
+			    <span class="caret"></span>
+			  </a>
+			  <ul class="dropdown-menu" id="ul2" style="text-align: center;">
+			    <!-- find dropdown menu in form.js -->
+			  </ul>
+			  <input id="typecolumn2" name="typecolumn2" type="text" placeholder="  項目名を選択してください　" style="width: 150px;">
+			</div>
+		</div>
+		<!-- /new -->
+		
+		<!-- 項目名 <select style="border: 1px solid blue" id="typecolumn1" name="typecolumn1"></select></br> -->
+		<!-- 項目名 <select id="typecolumn2" name="typecolumn2"></select> -->
 	</div>
 	<div class="span4">
-   		開始日付 <input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> <input id="start_hm" type="text" name="start_hm" style="width: 50px;"></br>
-   	         終了日付 <input id="finish_dt" type="date" name="finish_dt" style="width: 150px;"> <input id="finish_hm" type="text" name="finish_hm" style="width: 50px">	           
+   		<div class="input-prepend"><a class="btn btn-info">開始日付</a><input id="start_dt" type="date" name="start_dt" style="width: 150px;" onchange="startTimeChange()"> <input id="start_hm" type="text" name="start_hm" style="width: 50px;"></div>
+   	    <div class="input-prepend"><a class="btn btn-info">終了日付 </a><input id="finish_dt" type="date" name="finish_dt" style="width: 150px;"> <input id="finish_hm" type="text" name="finish_hm" style="width: 50px"></div>          
 	</div> 		
 	<div class="span1">
 	  <div class="btn-group" style="width: 100px;">
 	  <a class="btn btn-warning dropdown-toggle" data-toggle="dropdown" href="#">
-	    <i class="icon-pencil icon-white"></i> 計算
+	    <i class="icon-pencil icon-white"></i>  計算
 	    <span class="caret"></span>
 	  </a>
 	  <ul class="dropdown-menu">
