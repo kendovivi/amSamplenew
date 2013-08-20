@@ -36,9 +36,9 @@ AmCharts.ready(function() {
 	
 	//縦軸
 	//setGridOfAxis(valueAxis,max,0,max/5,"#000000");
-	setGridOfAxis(valueAxis,50,0,10,"#000000");
+	setGridOfAxis(valueAxis,25,0,5,"#000000");
 	setDefaultAxisAttr(valueAxis, "平均売上数");
-	setGridOfAxis(valueAxis2,10000,0,2000,"#000000");
+	setGridOfAxis(valueAxis2,5000,0,1000,"#000000");
 	setDefaultAxisAttr(valueAxis2, "平均売上数");
 	valueAxis2.position = "right";
 	
